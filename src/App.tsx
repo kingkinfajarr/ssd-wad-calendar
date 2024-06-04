@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import { useStore } from "./hooks/store";
 import EventDialog from "./components/EventDialog";
 import ConfirmationDialog from "./components/ConfirmationDialog";
+import { FaEdit, FaTrash } from "react-icons/fa"; // Import icons
 
 function App() {
   const { events, addEvent, editEvent, deleteEvent } = useStore();
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
-  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false); // State for confirmation dialog
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [deleteDay, setDeleteDay] = useState<number | null>(null);
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
 
@@ -71,7 +72,7 @@ function App() {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="mb-5">
+      <div className="my-5">
         <h2 className="text-2xl font-semibold">
           {new Date(currentYear, currentMonth).toLocaleString("default", {
             month: "long",
@@ -79,8 +80,16 @@ function App() {
           {currentYear}
         </h2>
       </div>
-      <div className="flex w-full">
-        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day, index) => (
+      <div className="flex w-full bg-black text-white py-2">
+        {[
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ].map((day, index) => (
           <div key={index} className="flex-1 text-center">
             {day}
           </div>
@@ -95,7 +104,7 @@ function App() {
         {daysInMonth.map((day) => (
           <div
             key={day}
-            className="w-full min-h-32 border flex flex-col items-center p-2 cursor-pointer"
+            className="w-full min-h-32 border flex flex-col  p-2 cursor-pointer relative"
             onClick={() => handleAddEvent(day)}
           >
             <span>{day}</span>
@@ -103,29 +112,28 @@ function App() {
               {events[day]?.map((event, index) => (
                 <div
                   key={index}
-                  className="bg-blue-500 text-white p-2 mb-1 rounded flex flex-col "
+                  className={` text-gray-900 p-2 mb-1 rounded flex flex-col relative`}
+                  style={{ backgroundColor: events[day][index].color }}
                 >
-                  <p>{event.name}</p>
-                  <p>{event.invitees.join(", ")}</p>
-                  <p>{event.time}</p>
-                  <button
-                    className="bg-yellow-500 text-xs px-2 py-1 m-1 rounded"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleEditEvent(day, index);
-                    }}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="bg-red-500 text-xs px-2 py-1 m-1 rounded"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeleteEvent(day, index);
-                    }}
-                  >
-                    Delete
-                  </button>
+                  <p className="text-xs font-semibold">{event.name}</p>
+                  <p className="text-xs">{event.invitees.join(", ")}</p>
+                  <p className="text-xs">{event.time}</p>
+                  <div className="absolute top-0 right-0 flex bg-slate-50 bg-opacity-40 p-1 rounded-bl-md">
+                    <FaEdit
+                      className="text-yellow-500 cursor-pointer mr-1"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEditEvent(day, index);
+                      }}
+                    />
+                    <FaTrash
+                      className="text-red-500 cursor-pointer"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteEvent(day, index);
+                      }}
+                    />
+                  </div>
                 </div>
               ))}
             </div>
