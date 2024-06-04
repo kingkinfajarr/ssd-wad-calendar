@@ -1,5 +1,7 @@
 # Calender Apps
 
+You can try demo for this application with open [demo.calender](https://ssd-wad-calendar-king.vercel.app/)
+
 ## Stack
 
 - [React.js](https://nextjs.org/) - The library for web and native user interfaces.
