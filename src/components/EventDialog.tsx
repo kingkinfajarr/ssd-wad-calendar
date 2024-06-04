@@ -115,7 +115,7 @@ const EventDialog: React.FC<EventDialogProps> = ({
           <p className="text-red-500 text-xs text-left mb-2">{nameError}</p>
         )}
         <input
-          type="time"
+          type="text"
           placeholder="Event Time (HH:MM AM/PM)"
           value={time}
           onChange={(e) => handleEventTimeChange(e.target.value)}
