@@ -21,12 +21,19 @@ const EventDialog: React.FC<EventDialogProps> = ({
   const [time, setTime] = useState(initialTime);
   const [invitees, setInvitees] = useState(initialInvitees.join(","));
   const [inviteesError, setInviteesError] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [timeError, setTimeError] = useState("");
 
   useEffect(() => {
     if (isOpen) {
       setName(initialName);
       setTime(initialTime);
       setInvitees(initialInvitees.join(","));
+
+      //reset errors
+      setNameError("");
+      setTimeError("");
+      setInviteesError("");
     }
   }, [isOpen, initialName, initialTime, initialInvitees]);
 
@@ -43,6 +50,19 @@ const EventDialog: React.FC<EventDialogProps> = ({
   };
 
   const handleSave = () => {
+    if (name.trim() === "" || time.trim() === "" || invitees.trim() === "") {
+      if (name.trim() === "") {
+        setNameError("Event name cannot be empty.");
+      }
+      if (time.trim() === "") {
+        setTimeError("Event time cannot be empty.");
+      }
+      if (invitees.trim() === "") {
+        setInviteesError("Event invitees cannot be empty.");
+      }
+      return;
+    }
+
     if (validateEmails(invitees)) {
       onSave(
         name,
@@ -52,6 +72,20 @@ const EventDialog: React.FC<EventDialogProps> = ({
       onClose();
     } else {
       setInviteesError("One or more invitees have invalid email addresses.");
+    }
+  };
+
+  const handleEventNameChange = (value: string) => {
+    setName(value);
+    if (nameError) {
+      setNameError("");
+    }
+  };
+
+  const handleEventTimeChange = (value: string) => {
+    setTime(value);
+    if (timeError) {
+      setTimeError("");
     }
   };
 
@@ -74,16 +108,22 @@ const EventDialog: React.FC<EventDialogProps> = ({
           type="text"
           placeholder="Event Name"
           value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-md mb-4"
+          onChange={(e) => handleEventNameChange(e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded-md mb-1"
         />
+        {nameError && (
+          <p className="text-red-500 text-xs text-left mb-2">{nameError}</p>
+        )}
         <input
           type="time"
           placeholder="Event Time (HH:MM AM/PM)"
           value={time}
-          onChange={(e) => setTime(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-md mb-4"
+          onChange={(e) => handleEventTimeChange(e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded-md mb-1"
         />
+        {timeError && (
+          <p className="text-red-500 text-xs text-left mb-2">{timeError}</p>
+        )}
         <input
           type="text"
           placeholder="Invitees (comma separated emails)"
@@ -92,7 +132,7 @@ const EventDialog: React.FC<EventDialogProps> = ({
           className="w-full p-2 border border-gray-300 rounded-md mb-1"
         />
         {inviteesError && (
-          <p className="text-red-500 text-xs text-left">{inviteesError}</p>
+          <p className="text-red-500 text-xs text-left mb-2">{inviteesError}</p>
         )}
         <div className="flex items-center justify-center mt-3">
           <button
