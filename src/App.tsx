@@ -10,6 +10,7 @@ function App() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const [isConfirmMaxEventOpen, setIsConfirmMaxEventOpen] = useState(false);
   const [deleteDay, setDeleteDay] = useState<number | null>(null);
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
 
@@ -34,6 +35,11 @@ function App() {
   };
 
   const handleAddEvent = (day: number) => {
+    if (events[day]?.length >= 3) {
+      setIsConfirmMaxEventOpen(true);
+      return;
+    }
+
     setSelectedDay(day);
     setEditIndex(null);
     setIsDialogOpen(true);
@@ -112,7 +118,7 @@ function App() {
               {events[day]?.map((event, index) => (
                 <div
                   key={index}
-                  className={` text-gray-900 p-2 mb-1 rounded flex flex-col relative`}
+                  className={`text-white p-2 mb-1 rounded flex flex-col relative`}
                   style={{ backgroundColor: events[day][index].color }}
                 >
                   <p className="text-xs font-semibold">{event.name}</p>
@@ -159,6 +165,11 @@ function App() {
         onClose={() => setIsConfirmDialogOpen(false)}
         onConfirm={confirmDeleteEvent}
         message="Are you sure you want to delete this event?"
+      />
+      <ConfirmationDialog
+        isOpen={isConfirmMaxEventOpen}
+        onClose={() => setIsConfirmMaxEventOpen(false)}
+        message="Maximum 3 events per day!"
       />
     </div>
   );

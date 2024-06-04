@@ -3,7 +3,7 @@ import React from "react";
 type ConfirmationDialogProps = {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm?: () => void;
   message: string;
 };
 
@@ -24,14 +24,16 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
             onClick={onClose}
             className="bg-gray-300 text-gray-800 px-4 py-2 rounded mr-2"
           >
-            Cancel
+            Close
           </button>
-          <button
-            onClick={onConfirm}
-            className="bg-red-500 text-white px-4 py-2 rounded"
-          >
-            Confirm
-          </button>
+          {onConfirm && (
+            <button
+              onClick={onConfirm}
+              className="bg-red-500 text-white px-4 py-2 rounded"
+            >
+              Confirm
+            </button>
+          )}
         </div>
       </div>
     </div>
