@@ -30,7 +30,7 @@ const EventDialog: React.FC<EventDialogProps> = ({
       setTime(initialTime);
       setInvitees(initialInvitees.join(","));
 
-      //reset errors
+      // Reset errors
       setNameError("");
       setTimeError("");
       setInviteesError("");
@@ -49,6 +49,11 @@ const EventDialog: React.FC<EventDialogProps> = ({
     return true;
   };
 
+  const validateTime = (time: string) => {
+    const timeRegex = /^(1[012]|0?[1-9]):[0-5][0-9] (AM|PM)$/;
+    return timeRegex.test(time);
+  };
+
   const handleSave = () => {
     if (name.trim() === "" || time.trim() === "" || invitees.trim() === "") {
       if (name.trim() === "") {
@@ -60,6 +65,11 @@ const EventDialog: React.FC<EventDialogProps> = ({
       if (invitees.trim() === "") {
         setInviteesError("Event invitees cannot be empty.");
       }
+      return;
+    }
+
+    if (!validateTime(time)) {
+      setTimeError("Please enter a valid time in HH:MM AM/PM format.");
       return;
     }
 
